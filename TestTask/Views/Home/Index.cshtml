@@ -1,58 +1,74 @@
-﻿@model IEnumerable<ArticleViewModel>;
+﻿@model IEnumerable<ArticleListViewModel>;
 
 @{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
+<h1>Последние новости</h1>
+<div class="articles-container row justify-content-center w-100 gap-1">
+    @foreach (var item in Model)
+    {
+        <div class="col-5 p-0">
+            <a class="text-decoration-none text-white" asp-controller="Articles" asp-action="Details" asp-route-id="@item.Id">
+                <div class="card-image-container w-100 h-100">
+                    <img class="card-image" src="data:image/png;base64,@(Convert.ToBase64String(item.ImageFile!))" alt="Article image" width="100%" height="100%" />
+                    <div class="card-image-container::before"></div>
+                    <div class="card-text-container">
+                        <h2>
+                            @Html.DisplayFor(modelItem => item.Title)
+                        </h2>
+                        <div class="d-flex align-content-between">
+                            <div>
+                                @Html.DisplayFor(modelItem => item.Subtitle)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    }
 </div>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.CreationTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Subtitle)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Text)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ImageTitle)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CreationTime)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Title)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Subtitle)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Text)
-                </td>
-                <td>
-                    <img src="@($"Images/{item.ImageTitle}")">
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+
+
+<style>
+    .card-image-container {
+        position: relative;
+        overflow: hidden;
+        display: block;
+    }
+
+    .card-image {
+        transition: all 0.3s ease;
+    }
+
+    .card-image-container::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        opacity: 0;
+        transition: all 0.3s ease;
+        z-index: 1;
+    }
+
+    .card-image-container:hover .card-image {
+        transform: scale(1.05);
+    }
+
+    .card-image-container:hover::before {
+        opacity: 1;
+    }
+
+    .card-text-container {
+        position: absolute;
+        z-index: 2;
+        bottom: 0;
+        left: 0;
+        padding: 1rem;
+        color: white;
+        width: 100%;
+    }
+</style>

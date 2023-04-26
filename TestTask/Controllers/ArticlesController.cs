@@ -8,38 +8,49 @@ namespace TestTask.Controllers
     public class ArticlesController : Controller
     {
         private readonly IArticlesService _service;
+        private const int ArticlesPerPage = 6;
 
         public ArticlesController(IArticlesService service, IMapper mapper)
         {
             this._service = service;
+            ViewBag.ArticlesPerPage = ArticlesPerPage;
         }
 
         // GET: Articles
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? page)
         {
-            var articles =await this._service.GetAllArticlesAsync();
-            return articles != null ? 
-                          View(articles) :
-                          Problem("Entity set 'NewsSiteDbContext.Articles' is null.");
+            page = page ?? 0;
+            ViewBag.IsEndOfRecords = false;
+            if (Request.Headers["x-requested-with"] == "XMLHttpRequest") // is ajax
+            {
+                var articles = await this._service.GetArticlesAsync(page.Value * ArticlesPerPage, ArticlesPerPage);
+                ViewBag.IsEndOfRecords = articles.Count < ArticlesPerPage;
+                return PartialView("_ArticleRow", articles);
+            }
+            else
+            {
+                ViewBag.Articles = await this._service.GetArticlesAsync(page.Value * ArticlesPerPage, ArticlesPerPage);
+                return View("Index");
+            }
         }
 
-        //// GET: Articles/Details/5
-        //public async Task<IActionResult> Details(int? id)
-        //{
-        //    if (id == null || _context.Articles == null)
-        //    {
-        //        return NotFound();
-        //    }
+        // GET: Articles/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
 
-        //    var articleDataModel = await _context.Articles
-        //        .FirstOrDefaultAsync(m => m.Id == id);
-        //    if (articleDataModel == null)
-        //    {
-        //        return NotFound();
-        //    }
+            var article = await this._service.GetArticleAsync(id.Value);
 
-        //    return View(articleDataModel);
-        //}
+            if (article == null)
+            {
+                return NotFound();
+            }
+
+            return View(article);
+        }
 
         // GET: Articles/Create
         public IActionResult Create()

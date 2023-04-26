@@ -30,28 +30,29 @@ namespace TestTask.BusinessLayer.Implementations
             return result;
         }
 
-        public async Task<List<ArticleViewModel>> GetAllArticlesAsync()
+        public async Task<List<ArticleListViewModel>> GetLastArticlesAsync()
         {
-            var result = this._mapper.Map<List<ArticleViewModel>>(await this._repository.GetAllArticlesAsync());
+            const int count = 4;
+            var result = this._mapper.Map<List<ArticleListViewModel>>(await this._repository.GetLastArticlesAsync(count));
             return result;
         }
 
-        public async Task<ArticleViewModel?> GetArticleAsync(int id)
+        public async Task<FullArticleViewModel?> GetArticleAsync(int id)
         {
-            var result = this._mapper.Map<ArticleViewModel?>(await this._repository.GetArticleAsync(id));
+            var result = this._mapper.Map<FullArticleViewModel?>(await this._repository.GetArticleAsync(id));
             return result;
         }
 
-        public async Task<List<ArticleViewModel>> GetArticlesAsync(int offset, int limit)
+        public async Task<List<ArticleListViewModel>> GetArticlesAsync(int offset, int limit)
         {
-            var result = this._mapper.Map<List<ArticleViewModel>>(await this._repository.GetArticlesAsync(offset, limit));
+            var result = this._mapper.Map<List<ArticleListViewModel>>(await this._repository.GetArticlesAsync(offset, limit));
             return result;
         }
 
-        public async Task<ArticleViewModel?> UpdateArticleAsync(ArticleViewModel article)
+        public async Task<FullArticleViewModel?> UpdateArticleAsync(FullArticleViewModel article)
         {
             var articleDataModel = this._mapper.Map<ArticleDataModel>(article);
-            var result = this._mapper.Map<ArticleViewModel?>(await this._repository.UpdateArticleAsync(articleDataModel));
+            var result = this._mapper.Map<FullArticleViewModel?>(await this._repository.UpdateArticleAsync(articleDataModel));
             return result;
         }
     }

@@ -1,4 +1,6 @@
-﻿namespace TestTask.DataAccess.DataModels
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace TestTask.DataAccess.DataModels
 {
     public class ArticleDataModel
     {
@@ -13,5 +15,8 @@
         public string Text { get; set; }
 
         public string ImageTitle { get; set; }
+
+        [NotMapped]
+        public byte[] ImageFile { get; set; }
     }
 }

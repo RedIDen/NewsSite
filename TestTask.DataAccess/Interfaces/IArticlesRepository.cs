@@ -4,7 +4,7 @@ namespace TestTask.DataAccess.Interfaces
 {
     public interface IArticlesRepository
     {
-        public Task<List<ArticleDataModel>> GetAllArticlesAsync();
+        public Task<List<ArticleDataModel>> GetLastArticlesAsync(int count);
 
         public Task<List<ArticleDataModel>> GetArticlesAsync(int offset, int limit);
 

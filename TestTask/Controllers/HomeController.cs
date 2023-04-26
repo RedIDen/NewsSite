@@ -16,7 +16,7 @@ namespace TestTask.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var articles = await this._service.GetAllArticlesAsync();
+            var articles = await this._service.GetLastArticlesAsync();
             return articles != null ?
                           View(articles) :
                           Problem("Entity set 'NewsSiteDbContext.Articles' is null.");
