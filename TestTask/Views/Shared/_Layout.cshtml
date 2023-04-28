@@ -1,5 +1,6 @@
 ﻿@using System.Security.Claims;
-
+@using System.Globalization;
+@using TestTask.Filters;
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,32 +17,50 @@
             <div class="container-fluid">
                 <div class="d-flex">
                     <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">MyNews</a>
-                    <a class="nav-link text-dark" asp-area="" asp-controller="Articles" asp-action="Index">Новости</a>
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Articles" asp-action="Index">@Resources.Resource.News</a>
                 </div>
 
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+                <div>
+                    @using (Html.BeginForm("ChangeCulture", "Culture"))
+                    {
+                        <select name="lang" onchange="this.form.submit()">
+                            @foreach (var culture in CultureAttribute.Cultures)
+                            {
+                                if (culture == CultureInfo.CurrentCulture.Name)
+                                {
+                                    <option selected value=@culture> @culture[..2]</option>
+                                }
+                                else
+                                {
+                                    <option value=@culture> @culture[..2]</option>
+                                }
+                            }
+                        </select>
+                    }
+                </div>
             </div>
             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between mx-2">
                 <ul class="navbar-nav flex-grow-1">
                     @if (User.FindFirst(ClaimsIdentity.DefaultNameClaimType) != null)
                     {
                         <li class="nav-item">
-                            <a class="nav-link text-dark" style="width:150px" asp-area="" asp-controller="Articles" asp-action="Create">Написать новость</a>
+                            <a class="nav-link text-dark" style="white-space: nowrap" asp-area="" asp-controller="Articles" asp-action="Create">@Resources.Resource.WriteArticle</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Logout">Выйти</a>
+                            <a class="nav-link text-dark" style="white-space: nowrap;" asp-area="" asp-controller="Account" asp-action="Logout">@Resources.Resource.LogOut</a>
                         </li>
                     }
                     else
                     {
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Register">Зарегистрироваться</a>
+                            <a class="nav-link text-dark" style="white-space: nowrap" asp-area="" asp-controller="Account" asp-action="Register">@Resources.Resource.SignIn</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">Войти</a>
+                            <a class="nav-link text-dark" style="white-space: nowrap" asp-area="" asp-controller="Account" asp-action="Login">@Resources.Resource.LogIn</a>
                         </li>
                     }
                 </ul>
@@ -54,9 +73,9 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="border-top footer text-muted text-center">
         <div class="container">
-            &copy; 2023 - TestTask
+            &copy; 2023 - MyNews
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

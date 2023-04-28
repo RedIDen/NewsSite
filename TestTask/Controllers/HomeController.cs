@@ -2,10 +2,12 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using TestTask.BusinessLayer.Interfaces;
+using TestTask.Filters;
 using TestTask.ViewModels;
 
 namespace TestTask.Controllers
 {
+    [Culture]
     public class HomeController : Controller
     {
         private readonly IArticlesService _service;

@@ -29,5 +29,10 @@ namespace TestTask.BusinessLayer.Implementations
             var result = this._mapper.Map<UserModel>(await this._repository.GetUserByLoginAndPasswordAsync(login, password));
             return result;
         }
+
+        public async Task<bool> IsUserExist(string login)
+        {
+            return await this._repository.IsUserExist(login);
+        }
     }
 }

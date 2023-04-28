@@ -1,12 +1,16 @@
 ﻿@model LoginViewModel;
 
+@{
+    ViewData["Title"] = Resources.Resource.Authorization;
+}
+
 <div class="row w-100 justify-content-center">
     <div class="col-md-4 mt-5">
         <div class="text-center">
-            <h3>Вход на сайт</h3>
+            <h3>@Resources.Resource.Authorization</h3>
         </div>
         <form asp-action="Login" asp-controller="Account" asp-anti-forgery="true">
-            <div class="validation" asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="validation text-danger" asp-validation-summary="ModelOnly"></div>
             <div>
                 <div class="form-group">
                     <label asp-for="Login" class="control-label"></label>
@@ -19,12 +23,17 @@
                     <span asp-validation-for="Password" class="text-danger" />
                 </div>
                 <div class="form-group">
-                    <input type="submit" value="Войти" class="btn btn-primary w-100 mt-3" />
+                    <input type="submit" value="@Resources.Resource.LogIn" class="btn btn-primary w-100 mt-3" />
                 </div>
                 <div class="mt-2 text-center">
-                    <a asp-action="Register" asp-controller="Account">Регистрация</a>
+                    <a asp-action="Register" asp-controller="Account">@Resources.Resource.SignIn</a>
                 </div>
             </div>
         </form>
     </div>
 </div>
+
+@section scripts{
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}

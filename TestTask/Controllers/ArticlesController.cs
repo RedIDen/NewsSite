@@ -3,10 +3,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TestTask.BusinessLayer.BusinessModels;
 using TestTask.BusinessLayer.Interfaces;
+using TestTask.Filters;
 using TestTask.ViewModels;
 
 namespace TestTask.Controllers
 {
+    [Culture]
     public class ArticlesController : Controller
     {
         private readonly IArticlesService _service;
@@ -66,7 +68,7 @@ namespace TestTask.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Title,Subtitle,Text,ImageFile")] CreateArticleViewModel article)
+        public async Task<IActionResult> Create([Bind("Title,Subtitle,Text,ConfirmPassword")] CreateArticleViewModel article)
         {
             if (ModelState.IsValid)
             {

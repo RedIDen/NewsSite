@@ -1,12 +1,12 @@
 ﻿@model IEnumerable<ArticleListViewModel>;
 
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = Resources.Resource.News;
 }
 
 <div class="articles-container row justify-content-center w-100 gap-1">
     <div class="text-center">
-        <h3>Новости</h3>
+        <h3>@Resources.Resource.News</h3>
     </div>
     @Html.Partial("_ArticleRow", ViewBag.Articles as IEnumerable<ArticleListViewModel>)
 </div>

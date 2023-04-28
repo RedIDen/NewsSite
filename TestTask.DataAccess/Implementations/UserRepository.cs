@@ -15,8 +15,7 @@ namespace TestTask.DataAccess.Implementations
 
         public async Task<int> CreateUserAsync(UserDataModel user)
         {
-            user.Id = 0;
-            user.IsActivated = false;
+            user.IsActivated = true;
 
             var savedUser = await this._context.Users.AddAsync(user);
             await this._context.SaveChangesAsync();
@@ -34,6 +33,11 @@ namespace TestTask.DataAccess.Implementations
             }
 
             return user.IsActivated ? user : null;
+        }
+
+        public async Task<bool> IsUserExist(string login)
+        {
+            return await this._context.Users.AnyAsync(x => x.Login == login);
         }
     }
 }

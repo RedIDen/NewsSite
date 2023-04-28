@@ -4,10 +4,12 @@ namespace TestTask.ViewModels
 {
     public class LoginViewModel
     {
-        [Required(ErrorMessage = "Не указан логин")]
+        [Required(ErrorMessageResourceType = typeof(Resources.Resource), ErrorMessageResourceName = "EmailRequiered")]
+        [Display(Name = "Email", ResourceType = typeof(Resources.Resource))]
         public string Login { get; set; }
 
-        [Required(ErrorMessage = "Не указан пароль")]
+        [Required(ErrorMessageResourceType = typeof(Resources.Resource), ErrorMessageResourceName = "PasswordRequired")]
+        [Display(Name = "Password", ResourceType = typeof(Resources.Resource))]
         [DataType(DataType.Password)]
         public string Password { get; set; }
     }

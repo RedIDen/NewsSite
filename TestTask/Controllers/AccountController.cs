@@ -9,9 +9,11 @@ using System.Text;
 using System.Security.Cryptography;
 using TestTask.BusinessLayer.BusinessModels;
 using Microsoft.AspNetCore.Authorization;
+using TestTask.Filters;
 
 namespace TestTask.Controllers
 {
+    [Culture]
     public class AccountController : Controller
     {
         private readonly IUserService _service;
@@ -26,7 +28,7 @@ namespace TestTask.Controllers
         [HttpGet]
         public IActionResult Login()
         {
-            if (User.FindFirst(ClaimsIdentity.DefaultNameClaimType) != null)            
+            if (User.FindFirst(ClaimsIdentity.DefaultNameClaimType) != null)
             {
                 return RedirectToAction("Index", "Home");
             }
@@ -36,22 +38,24 @@ namespace TestTask.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginViewModel model)
+        public async Task<IActionResult> Login([Bind("Login,Password")] LoginViewModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
             model.Password = GetHash(model.Password);
 
-            if (ModelState.IsValid)
+            var user = await this._service.GetUserByLoginAndPasswordAsync(model.Login, model.Password);
+            if (user != null)
             {
-                var user = await this._service.GetUserByLoginAndPasswordAsync(model.Login, model.Password);
-                if (user != null)
-                {
-                    await Authenticate(model.Login);
+                await Authenticate(model.Login);
 
-                    return RedirectToAction("Index", "Home");
-                }
-
-                ModelState.AddModelError("", "Некорректные логин и(или) пароль");
+                return RedirectToAction("Index", "Home");
             }
+
+            ModelState.AddModelError("", Resources.Resource.WrongLoginOrPassword);
 
             return View(model);
         }
@@ -69,31 +73,25 @@ namespace TestTask.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(RegisterViewModel model)
+        public async Task<IActionResult> Register([Bind("Login,Password,Name,ConfirmPassword")] RegisterViewModel model)
         {
-            if (model.Password != model.ConfirmPassword)
+            if (!ModelState.IsValid)
             {
-                ModelState.AddModelError("", "Пароли не совпадают");
                 return View(model);
             }
 
-            model.Password = GetHash(model.Password);
-
-            if (ModelState.IsValid)
+            if (!await this._service.IsUserExist(model.Login))
             {
-                var user = await this._service.GetUserByLoginAndPasswordAsync(model.Login, model.Password);
-                if (user == null)
-                {
-                    await this._service.CreateUserAsync(this._mapper.Map<RegisterModel>(model));
+                model.Password = GetHash(model.Password);
 
-                    await Authenticate(model.Login); // аутентификация
+                await this._service.CreateUserAsync(this._mapper.Map<RegisterModel>(model));
 
-                    return RedirectToAction("Index", "Home");
-                }
+                await Authenticate(model.Login); // аутентификация
 
-                ModelState.AddModelError("", "Некорректные логин и(или) пароль");
+                return RedirectToAction("Index", "Home");
             }
 
+            ModelState.AddModelError("", Resources.Resource.LoginExists);
             return View(model);
         }
 
