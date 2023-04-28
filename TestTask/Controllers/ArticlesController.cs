@@ -72,97 +72,68 @@ namespace TestTask.Controllers
             return View(article);
         }
 
-        //// GET: Articles/Edit/5
-        //public async Task<IActionResult> Edit(int? id)
-        //{
-        //    if (id == null || _context.Articles == null)
-        //    {
-        //        return NotFound();
-        //    }
+        // GET: Articles/Edit/5
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
 
-        //    var articleDataModel = await _context.Articles.FindAsync(id);
-        //    if (articleDataModel == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    return View(articleDataModel);
-        //}
+            var article = await this._service.GetArticleToEditAsync(id.Value);
 
-        //// POST: Articles/Edit/5
-        //// To protect from overposting attacks, enable the specific properties you want to bind to.
-        //// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Edit(int id, [Bind("Id,CreationTime,Title,Subtitle,Text,ImageTitle")] ArticleDataModel articleDataModel)
-        //{
-        //    if (id != articleDataModel.Id)
-        //    {
-        //        return NotFound();
-        //    }
+            if (article == null)
+            {
+                return NotFound();
+            }
 
-        //    if (ModelState.IsValid)
-        //    {
-        //        try
-        //        {
-        //            _context.Update(articleDataModel);
-        //            await _context.SaveChangesAsync();
-        //        }
-        //        catch (DbUpdateConcurrencyException)
-        //        {
-        //            if (!ArticleDataModelExists(articleDataModel.Id))
-        //            {
-        //                return NotFound();
-        //            }
-        //            else
-        //            {
-        //                throw;
-        //            }
-        //        }
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    return View(articleDataModel);
-        //}
+            return View(article);
+        }
 
-        //// GET: Articles/Delete/5
-        //public async Task<IActionResult> Delete(int? id)
-        //{
-        //    if (id == null || _context.Articles == null)
-        //    {
-        //        return NotFound();
-        //    }
+        // POST: Articles/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("Id,CreationTime,Title,Subtitle,Text,ImageFile")] EditArticleModel article)
+        {
+            if (id != article.Id)
+            {
+                return NotFound();
+            }
 
-        //    var articleDataModel = await _context.Articles
-        //        .FirstOrDefaultAsync(m => m.Id == id);
-        //    if (articleDataModel == null)
-        //    {
-        //        return NotFound();
-        //    }
+            if (ModelState.IsValid)
+            {
+                await this._service.EditArticleAsync(article);
+                return RedirectToAction(nameof(Index));
+            }
 
-        //    return View(articleDataModel);
-        //}
+            return View(article);
+        }
 
-        //// POST: Articles/Delete/5
-        //[HttpPost, ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> DeleteConfirmed(int id)
-        //{
-        //    if (_context.Articles == null)
-        //    {
-        //        return Problem("Entity set 'NewsSiteDbContext.Articles'  is null.");
-        //    }
-        //    var articleDataModel = await _context.Articles.FindAsync(id);
-        //    if (articleDataModel != null)
-        //    {
-        //        _context.Articles.Remove(articleDataModel);
-        //    }
+        // GET: Articles/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
 
-        //    await _context.SaveChangesAsync();
-        //    return RedirectToAction(nameof(Index));
-        //}
+            var article = await this._service.GetArticleAsync(id.Value);
 
-        //private bool ArticleDataModelExists(int id)
-        //{
-        //  return (_context.Articles?.Any(e => e.Id == id)).GetValueOrDefault();
-        //}
+            if (article == null)
+            {
+                return NotFound();
+            }
+
+            return View(article);
+        }
+
+        // POST: Articles/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            await this._service.DeleteArticleAsync(id);
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

@@ -10,9 +10,11 @@ namespace TestTask.BusinessLayer.Interfaces
 
         public Task<FullArticleViewModel?> GetArticleAsync(int id);
 
+        public Task<EditArticleModel?> GetArticleToEditAsync(int id);
+
         public Task<int> CreateArticleAsync(CreateArticleModel article);
 
-        public Task<FullArticleViewModel?> UpdateArticleAsync(FullArticleViewModel article);
+        public Task<EditArticleModel?> EditArticleAsync(EditArticleModel article);
 
         public Task<bool> DeleteArticleAsync(int id);
     }

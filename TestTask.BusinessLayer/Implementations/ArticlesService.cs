@@ -43,16 +43,22 @@ namespace TestTask.BusinessLayer.Implementations
             return result;
         }
 
+        public async Task<EditArticleModel?> GetArticleToEditAsync(int id)
+        {
+            var result = this._mapper.Map<EditArticleModel?>(await this._repository.GetArticleAsync(id));
+            return result;
+        }
+
         public async Task<List<ArticleListViewModel>> GetArticlesAsync(int offset, int limit)
         {
             var result = this._mapper.Map<List<ArticleListViewModel>>(await this._repository.GetArticlesAsync(offset, limit));
             return result;
         }
 
-        public async Task<FullArticleViewModel?> UpdateArticleAsync(FullArticleViewModel article)
+        public async Task<EditArticleModel?> EditArticleAsync(EditArticleModel article)
         {
             var articleDataModel = this._mapper.Map<ArticleDataModel>(article);
-            var result = this._mapper.Map<FullArticleViewModel?>(await this._repository.UpdateArticleAsync(articleDataModel));
+            var result = this._mapper.Map<EditArticleModel?>(await this._repository.EditArticleAsync(articleDataModel));
             return result;
         }
     }

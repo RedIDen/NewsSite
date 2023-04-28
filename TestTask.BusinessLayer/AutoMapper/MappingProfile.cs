@@ -14,10 +14,17 @@ namespace TestTask.BusinessLayer.AutoMapper
                 .ForMember(x => x.ImageTitle, option => option.MapFrom(x => x.ImageFile.FileName))
                 .ForMember(x => x.ImageFile, option => option.MapFrom(x => MapImageFile(x.ImageFile)));
 
+            this.CreateMap<ArticleDataModel, EditArticleModel>()
+                .ForMember(x => x.ImageFile, option => option.Ignore());
+            this.CreateMap<EditArticleModel, ArticleDataModel>()
+                .ForMember(x => x.ImageTitle, option => option.MapFrom(x => x.ImageFile.FileName))
+                .ForMember(x => x.ImageFile, option => option.MapFrom(x => MapImageFile(x.ImageFile)));
+
+
             this.CreateMap<ArticleDataModel, FullArticleViewModel>()
                 .ForMember(x => x.CreationTime, option => option.MapFrom(x => MapDate(x.CreationTime) + $" в {x.CreationTime.ToShortTimeString()}"));
             this.CreateMap<ArticleDataModel, ArticleListViewModel>()
-                .ForMember(x => x.CreationTime, option => option.MapFrom(x => MapDate(x.CreationTime) + $" в {x.CreationTime.ToShortTimeString()}")); 
+                .ForMember(x => x.CreationTime, option => option.MapFrom(x => MapDate(x.CreationTime) + $" в {x.CreationTime.ToShortTimeString()}"));
 
             this.CreateMap<UserDataModel, UserModel>();
             this.CreateMap<RegisterModel, UserDataModel>();

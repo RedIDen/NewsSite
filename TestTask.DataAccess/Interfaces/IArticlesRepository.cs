@@ -12,7 +12,7 @@ namespace TestTask.DataAccess.Interfaces
 
         public Task<int> CreateArticleAsync(ArticleDataModel article);
 
-        public Task<ArticleDataModel?> UpdateArticleAsync(ArticleDataModel article);
+        public Task<ArticleDataModel?> EditArticleAsync(ArticleDataModel article);
 
         public Task<bool> DeleteArticleAsync(int id);
     }
