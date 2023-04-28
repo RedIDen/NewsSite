@@ -2,36 +2,38 @@
 using Microsoft.AspNetCore.Mvc;
 using TestTask.BusinessLayer.BusinessModels;
 using TestTask.BusinessLayer.Interfaces;
+using TestTask.ViewModels;
 
 namespace TestTask.Controllers
 {
     public class ArticlesController : Controller
     {
         private readonly IArticlesService _service;
+        private readonly IMapper _mapper;
         private const int ArticlesPerPage = 6;
 
         public ArticlesController(IArticlesService service, IMapper mapper)
         {
             this._service = service;
+            this._mapper = mapper;
             ViewBag.ArticlesPerPage = ArticlesPerPage;
         }
 
         // GET: Articles
         public async Task<IActionResult> Index(int? page)
         {
-            page = page ?? 0;
+            page ??= 0;
             ViewBag.IsEndOfRecords = false;
+            var articles = this._mapper.Map<List<ArticleListViewModel>>(await this._service.GetArticlesAsync(page.Value * ArticlesPerPage, ArticlesPerPage));
+
             if (Request.Headers["x-requested-with"] == "XMLHttpRequest") // is ajax
             {
-                var articles = await this._service.GetArticlesAsync(page.Value * ArticlesPerPage, ArticlesPerPage);
                 ViewBag.IsEndOfRecords = articles.Count < ArticlesPerPage;
                 return PartialView("_ArticleRow", articles);
             }
-            else
-            {
-                ViewBag.Articles = await this._service.GetArticlesAsync(page.Value * ArticlesPerPage, ArticlesPerPage);
-                return View("Index");
-            }
+
+            ViewBag.Articles = articles;
+            return View("Index");
         }
 
         // GET: Articles/Details/5
@@ -42,7 +44,7 @@ namespace TestTask.Controllers
                 return NotFound();
             }
 
-            var article = await this._service.GetArticleAsync(id.Value);
+            var article = this._mapper.Map<FullArticleViewModel>(await this._service.GetArticleAsync(id.Value));
 
             if (article == null)
             {
@@ -61,11 +63,11 @@ namespace TestTask.Controllers
         // POST: Articles/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Title,Subtitle,Text,ImageFile")] CreateArticleModel article)
+        public async Task<IActionResult> Create([Bind("Title,Subtitle,Text,ImageFile")] CreateArticleViewModel article)
         {
             if (ModelState.IsValid)
             {
-                await this._service.CreateArticleAsync(article);
+                await this._service.CreateArticleAsync(this._mapper.Map<CreateArticleModel>(article));
                 return RedirectToAction(nameof(Index));
             }
 
@@ -80,7 +82,7 @@ namespace TestTask.Controllers
                 return NotFound();
             }
 
-            var article = await this._service.GetArticleToEditAsync(id.Value);
+            var article = this._mapper.Map<EditArticleViewModel>(await this._service.GetArticleToEditAsync(id.Value));
 
             if (article == null)
             {
@@ -93,7 +95,7 @@ namespace TestTask.Controllers
         // POST: Articles/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,CreationTime,Title,Subtitle,Text,ImageFile")] EditArticleModel article)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,CreationTime,Title,Subtitle,Text,ImageFile")] EditArticleViewModel article)
         {
             if (id != article.Id)
             {
@@ -102,7 +104,7 @@ namespace TestTask.Controllers
 
             if (ModelState.IsValid)
             {
-                await this._service.EditArticleAsync(article);
+                await this._service.EditArticleAsync(this._mapper.Map<EditArticleModel>(article));
                 return RedirectToAction(nameof(Index));
             }
 
@@ -117,7 +119,7 @@ namespace TestTask.Controllers
                 return NotFound();
             }
 
-            var article = await this._service.GetArticleAsync(id.Value);
+            var article = this._mapper.Map<FullArticleViewModel>(await this._service.GetArticleAsync(id.Value));
 
             if (article == null)
             {

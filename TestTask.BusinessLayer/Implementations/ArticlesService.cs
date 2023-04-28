@@ -30,16 +30,16 @@ namespace TestTask.BusinessLayer.Implementations
             return result;
         }
 
-        public async Task<List<ArticleListViewModel>> GetLastArticlesAsync()
+        public async Task<List<ArticleListModel>> GetLastArticlesAsync()
         {
             const int count = 4;
-            var result = this._mapper.Map<List<ArticleListViewModel>>(await this._repository.GetLastArticlesAsync(count));
+            var result = this._mapper.Map<List<ArticleListModel>>(await this._repository.GetLastArticlesAsync(count));
             return result;
         }
 
-        public async Task<FullArticleViewModel?> GetArticleAsync(int id)
+        public async Task<FullArticleModel?> GetArticleAsync(int id)
         {
-            var result = this._mapper.Map<FullArticleViewModel?>(await this._repository.GetArticleAsync(id));
+            var result = this._mapper.Map<FullArticleModel?>(await this._repository.GetArticleAsync(id));
             return result;
         }
 
@@ -49,9 +49,9 @@ namespace TestTask.BusinessLayer.Implementations
             return result;
         }
 
-        public async Task<List<ArticleListViewModel>> GetArticlesAsync(int offset, int limit)
+        public async Task<List<ArticleListModel>> GetArticlesAsync(int offset, int limit)
         {
-            var result = this._mapper.Map<List<ArticleListViewModel>>(await this._repository.GetArticlesAsync(offset, limit));
+            var result = this._mapper.Map<List<ArticleListModel>>(await this._repository.GetArticlesAsync(offset, limit));
             return result;
         }
 

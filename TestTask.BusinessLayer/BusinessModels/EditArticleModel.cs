@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-
-namespace TestTask.BusinessLayer.BusinessModels
+﻿namespace TestTask.BusinessLayer.BusinessModels
 {
     public class EditArticleModel
     {
@@ -12,7 +10,9 @@ namespace TestTask.BusinessLayer.BusinessModels
 
         public string Text { get; set; }
 
-        public IFormFile? ImageFile { get; set; }
+        public string ImageTitle { get; set; }
+
+        public byte[]? ImageFile { get; set; }
 
         public DateTime CreationTime { get; set; }
     }

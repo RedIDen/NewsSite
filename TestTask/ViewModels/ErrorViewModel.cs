@@ -1,4 +1,4 @@
-namespace TestTask.BusinessLayer.BusinessModels
+namespace TestTask.ViewModels
 {
     public class ErrorViewModel
     {

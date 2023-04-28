@@ -10,7 +10,7 @@ using TestTask.DataAccess.Interfaces;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
-builder.Services.AddAutoMapper(typeof(MappingProfile));
+builder.Services.AddAutoMapper(typeof(BLMappingProfile), typeof(PLMappingProfile));
 
 var connection = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<NewsSiteDbContext>(options => options.UseSqlServer(connection, b => b.MigrationsAssembly("TestTask.DataAccess")));

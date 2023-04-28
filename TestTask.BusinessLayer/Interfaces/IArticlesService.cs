@@ -4,11 +4,11 @@ namespace TestTask.BusinessLayer.Interfaces
 {
     public interface IArticlesService
     {
-        public Task<List<ArticleListViewModel>> GetLastArticlesAsync();
+        public Task<List<ArticleListModel>> GetLastArticlesAsync();
 
-        public Task<List<ArticleListViewModel>> GetArticlesAsync(int offset, int limit);
+        public Task<List<ArticleListModel>> GetArticlesAsync(int offset, int limit);
 
-        public Task<FullArticleViewModel?> GetArticleAsync(int id);
+        public Task<FullArticleModel?> GetArticleAsync(int id);
 
         public Task<EditArticleModel?> GetArticleToEditAsync(int id);
 

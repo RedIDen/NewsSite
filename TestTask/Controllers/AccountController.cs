@@ -3,20 +3,23 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using TestTask.BusinessLayer.BusinessModels;
 using TestTask.BusinessLayer.Interfaces;
+using TestTask.ViewModels;
 using System.Text;
 using System.Security.Cryptography;
+using TestTask.BusinessLayer.BusinessModels;
 
 namespace TestTask.Controllers
 {
     public class AccountController : Controller
     {
-        private IUserService _service;
+        private readonly IUserService _service;
+        private readonly IMapper _mapper;
 
         public AccountController(IUserService service, IMapper mapper)
         {
             this._service = service;
+            this._mapper = mapper;
         }
 
         [HttpGet]
@@ -27,7 +30,7 @@ namespace TestTask.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginModel model)
+        public async Task<IActionResult> Login(LoginViewModel model)
         {
             model.Password = GetHash(model.Password);
 
@@ -36,10 +39,11 @@ namespace TestTask.Controllers
                 var user = await this._service.GetUserByLoginAndPasswordAsync(model.Login, model.Password);
                 if (user != null)
                 {
-                    await Authenticate(model.Login); 
+                    await Authenticate(model.Login);
 
                     return RedirectToAction("Index", "Home");
                 }
+
                 ModelState.AddModelError("", "Некорректные логин и(или) пароль");
             }
 
@@ -54,8 +58,14 @@ namespace TestTask.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(RegisterModel model)
+        public async Task<IActionResult> Register(RegisterViewModel model)
         {
+            if (model.Password != model.ConfirmPassword)
+            {
+                ModelState.AddModelError("", "Пароли не совпадают");
+                return View(model);
+            }
+
             model.Password = GetHash(model.Password);
 
             if (ModelState.IsValid)
@@ -63,14 +73,14 @@ namespace TestTask.Controllers
                 var user = await this._service.GetUserByLoginAndPasswordAsync(model.Login, model.Password);
                 if (user == null)
                 {
-                    await this._service.CreateUserAsync(model);
+                    await this._service.CreateUserAsync(this._mapper.Map<RegisterModel>(model));
 
                     await Authenticate(model.Login); // аутентификация
 
                     return RedirectToAction("Index", "Home");
                 }
-                else
-                    ModelState.AddModelError("", "Некорректные логин и(или) пароль");
+
+                ModelState.AddModelError("", "Некорректные логин и(или) пароль");
             }
 
             return View(model);
@@ -95,19 +105,18 @@ namespace TestTask.Controllers
 
         private static string GetHash(string password)
         {
-            using (SHA256 sha256Hash = SHA256.Create())
+            using SHA256 sha256Hash = SHA256.Create();
+
+            byte[] data = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(password));
+
+            StringBuilder sBuilder = new StringBuilder();
+
+            for (int i = 0; i < data.Length; i++)
             {
-                byte[] data = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(password));
-
-                StringBuilder sBuilder = new StringBuilder();
-
-                for (int i = 0; i < data.Length; i++)
-                {
-                    sBuilder.Append(data[i].ToString("x2"));
-                }
-
-                return sBuilder.ToString();
+                sBuilder.Append(data[i].ToString("x2"));
             }
+
+            return sBuilder.ToString();
         }
     }
 }

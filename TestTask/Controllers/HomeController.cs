@@ -1,22 +1,25 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using TestTask.BusinessLayer.BusinessModels;
 using TestTask.BusinessLayer.Interfaces;
+using TestTask.ViewModels;
 
 namespace TestTask.Controllers
 {
     public class HomeController : Controller
     {
-        private IArticlesService _service;
+        private readonly IArticlesService _service;
+        private readonly IMapper _mapper;
 
-        public HomeController(IArticlesService service)
+        public HomeController(IArticlesService service, IMapper mapper)
         {
             this._service = service;
+            this._mapper = mapper;
         }
 
         public async Task<IActionResult> Index()
         {
-            var articles = await this._service.GetLastArticlesAsync();
+            var articles = this._mapper.Map<List<ArticleListViewModel>>(await this._service.GetLastArticlesAsync());
             return articles != null ?
                           View(articles) :
                           Problem("Entity set 'NewsSiteDbContext.Articles' is null.");
