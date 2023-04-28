@@ -1,34 +1,40 @@
 ﻿@model RegisterViewModel
 
-<h2>Регистрация</h2>
-
-<a asp-action="Login" asp-controller="Account">Авторизация</a>
-
-<form asp-action="Register" asp-controller="Account" asp-anti-forgery="true">
-    <div class="validation" asp-validation-summary="ModelOnly"></div>
-    <div>
-        <div>
-            <label asp-for="Login">Введите имя</label><br />
-            <input type="text" asp-for="Name" />
-            <span asp-validation-for="Name" />
+<div class="row w-100 justify-content-center">
+    <div class="col-md-4 mt-5">
+        <div class="text-center">
+            <h3>Регистрация</h3>
         </div>
-        <div>
-            <label asp-for="Login">Введите логин</label><br />
-            <input type="text" asp-for="Login" />
-            <span asp-validation-for="Login" />
-        </div>
-        <div>
-            <label asp-for="Password">Введите пароль</label><br />
-            <input asp-for="Password" />
-            <span asp-validation-for="Password" />
-        </div>
-        <div>
-            <label asp-for="ConfirmPassword">Повторите пароль</label><br />
-            <input asp-for="ConfirmPassword" />
-            <span asp-validation-for="ConfirmPassword" />
-        </div>
-        <div>
-            <input type="submit" value="Регистрация" />
-        </div>
+        <form asp-action="Register" asp-controller="Account" asp-anti-forgery="true">
+            <div class="validation" asp-validation-summary="ModelOnly"></div>
+            <div>
+                <div class="form-group">
+                    <label asp-for="Login" class="control-label"></label>
+                    <input type="text" asp-for="Login" class="form-control" />
+                    <span asp-validation-for="Login" class="text-danger" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="Name" class="control-label"></label>
+                    <input type="text" asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="Password" class="control-label"></label>
+                    <input asp-for="Password" class="form-control" />
+                    <span asp-validation-for="Password" class="text-danger" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="ConfirmPassword" class="control-label"></label>
+                    <input asp-for="ConfirmPassword" class="form-control" />
+                    <span asp-validation-for="ConfirmPassword" class="text-danger" />
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Регистрация" class="btn btn-primary w-100 mt-3" />
+                </div>
+                <div class="mt-2 text-center">
+                    <a asp-action="Login" asp-controller="Account">Авторизация</a>
+                </div>
+            </div>
+        </form>
     </div>
-</form>
+</div>

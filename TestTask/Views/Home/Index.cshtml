@@ -4,8 +4,10 @@
     ViewData["Title"] = "Home Page";
 }
 
-<h1>Последние новости</h1>
 <div class="articles-container row justify-content-center w-100 gap-1">
+    <div class="text-center">
+        <h3>Последние новости к этому часу</h3>
+    </div>
     @foreach (var item in Model)
     {
         <div class="col-5 p-0">

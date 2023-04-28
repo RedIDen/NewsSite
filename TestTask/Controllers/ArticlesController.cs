@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TestTask.BusinessLayer.BusinessModels;
 using TestTask.BusinessLayer.Interfaces;
@@ -55,12 +56,14 @@ namespace TestTask.Controllers
         }
 
         // GET: Articles/Create
+        [Authorize]
         public IActionResult Create()
         {
             return View();
         }
 
         // POST: Articles/Create
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Title,Subtitle,Text,ImageFile")] CreateArticleViewModel article)
@@ -75,6 +78,7 @@ namespace TestTask.Controllers
         }
 
         // GET: Articles/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -93,6 +97,7 @@ namespace TestTask.Controllers
         }
 
         // POST: Articles/Edit/5
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,CreationTime,Title,Subtitle,Text,ImageFile")] EditArticleViewModel article)
@@ -112,6 +117,7 @@ namespace TestTask.Controllers
         }
 
         // GET: Articles/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -130,6 +136,7 @@ namespace TestTask.Controllers
         }
 
         // POST: Articles/Delete/5
+        [Authorize]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

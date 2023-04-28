@@ -4,21 +4,16 @@
     ViewData["Title"] = "Home Page";
 }
 
-<h1>Новости</h1>
 <div class="articles-container row justify-content-center w-100 gap-1">
+    <div class="text-center">
+        <h3>Новости</h3>
+    </div>
     @Html.Partial("_ArticleRow", ViewBag.Articles as IEnumerable<ArticleListViewModel>)
 </div>
-
-<div id="loading">
-@*   <img src='@Url.Content("~/images/spin.gif")' /><p><b>Loading the next @ViewBag.RecordsPerPage&hellip;</b></p>
-*@</div>
 
 @section scripts{
     <script src="~/js/infiniteScroll.js"></script>
     <script type="text/javascript">
-        $(function () {
-            $("div#loading").hide();
-        });
         var moreRowsUrl = "/Articles/index";
         $(window).scroll(scrollHandler);
     </script>

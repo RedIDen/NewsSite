@@ -8,6 +8,7 @@ using TestTask.ViewModels;
 using System.Text;
 using System.Security.Cryptography;
 using TestTask.BusinessLayer.BusinessModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TestTask.Controllers
 {
@@ -25,6 +26,11 @@ namespace TestTask.Controllers
         [HttpGet]
         public IActionResult Login()
         {
+            if (User.FindFirst(ClaimsIdentity.DefaultNameClaimType) != null)            
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             return View();
         }
 
@@ -53,6 +59,11 @@ namespace TestTask.Controllers
         [HttpGet]
         public IActionResult Register()
         {
+            if (User.FindFirst(ClaimsIdentity.DefaultNameClaimType) != null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             return View();
         }
 
@@ -86,6 +97,7 @@ namespace TestTask.Controllers
             return View(model);
         }
 
+        [Authorize]
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
