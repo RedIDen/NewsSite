@@ -22,10 +22,10 @@ namespace TestTask.BusinessLayer.AutoMapper
 
 
             this.CreateMap<FullArticleModel, FullArticleViewModel>()
-                .ForMember(x => x.CreationTime, option => option.MapFrom(x => MapDate(x.CreationTime) + $" в {x.CreationTime.ToShortTimeString()}"));
+                .ForMember(x => x.CreationTime, option => option.MapFrom(x => MapDate(x.CreationTime) + $" {Resources.Resource.At} {x.CreationTime.ToShortTimeString()}"));
             
             this.CreateMap<ArticleListModel, ArticleListViewModel>()
-                .ForMember(x => x.CreationTime, option => option.MapFrom(x => MapDate(x.CreationTime) + $" в {x.CreationTime.ToShortTimeString()}"));
+                .ForMember(x => x.CreationTime, option => option.MapFrom(x => MapDate(x.CreationTime) + $" {Resources.Resource.At} {x.CreationTime.ToShortTimeString()}"));
 
             this.CreateMap<UserModel, UserViewModel>();
             this.CreateMap<RegisterViewModel, RegisterModel>();
@@ -39,8 +39,8 @@ namespace TestTask.BusinessLayer.AutoMapper
             {
                 _ when date.Year != now.Year => date.ToString("dd MMM yyyy"),
                 _ when date.Month != now.Month => date.ToString("dd MMM"),
-                _ when date.Day == now.Day => "Сегодня",
-                _ when date.Day == now.Day - 1 => "Вчера",
+                _ when date.Day == now.Day => Resources.Resource.Today,
+                _ when date.Day == now.Day - 1 => Resources.Resource.Yesterday,
                 _ => date.ToString("dd MMM"),
             };
         }
