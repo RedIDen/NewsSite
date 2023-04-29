@@ -18,8 +18,6 @@ namespace TestTask.ViewModels
         [Display(Name = "Text", ResourceType = typeof(Resources.Resource))]
         public string Text { get; set; }
 
-        [Required(ErrorMessageResourceType = typeof(Resources.Resource), ErrorMessageResourceName = "ImageRequired")]
-        [Display(Name = "Image", ResourceType = typeof(Resources.Resource))]
         public IFormFile? ImageFile { get; set; }
 
         public DateTime CreationTime { get; set; }

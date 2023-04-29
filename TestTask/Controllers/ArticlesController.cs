@@ -68,7 +68,7 @@ namespace TestTask.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Title,Subtitle,Text,ConfirmPassword")] CreateArticleViewModel article)
+        public async Task<IActionResult> Create([Bind("Title,Subtitle,Text,ImageFile")] CreateArticleViewModel article)
         {
             if (ModelState.IsValid)
             {
@@ -109,7 +109,9 @@ namespace TestTask.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            article.CreationTime = DateTime.Now;
+            ModelState.ClearValidationState(nameof(article));
+            if (!TryValidateModel(article, nameof(article)))
             {
                 await this._service.EditArticleAsync(this._mapper.Map<EditArticleModel>(article));
                 return RedirectToAction(nameof(Index));
